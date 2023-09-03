@@ -1,6 +1,7 @@
 package com.example.uruG.Controllers;
 
 import com.example.uruG.Articulo;
+import com.example.uruG.AuxiliarDeposito;
 import com.example.uruG.Cadeteria;
 import com.example.uruG.Pedido;
 import com.example.uruG.Servicios.ApiResponse;
@@ -41,13 +42,14 @@ public class AuxDepoController {
 
     //NO ES NECESARIO EL USO DE ARTICULO DOM EL ARRAY PUEDE SER DE ARTICULOS
     @PostMapping("/auxdepo/pedidoArmado")
-    public ResponseEntity<ApiResponse> PedidoArmado(@RequestParam ("pedidoId") int  pedidoid, @RequestBody ArrayList<Articulo> listaArticulos) {
+    public ResponseEntity<ApiResponse> PedidoArmado(@RequestParam ("pedidoId") int  pedidoid,@RequestParam("auxId") int auxId, @RequestBody ArrayList<Articulo> listaArticulos) {
 
         ApiResponse response = new ApiResponse();
 
         try {
             fachada.guardarArticulos(listaArticulos);
-            fachada.pedidoArmado(pedidoid,listaArticulos);
+            AuxiliarDeposito aux = fachada.obtenerAuxDepoPorId(auxId);
+            fachada.pedidoArmado(pedidoid,aux,listaArticulos);
             response.setPedidos(fachada.pedidosAll());
             response.setMensaje("El pedido cambio de estado a listo para facturacion");
             return ResponseEntity.ok(response);
@@ -71,9 +73,7 @@ public class AuxDepoController {
         } catch (Exception e) {
             response.setMensaje(e.getMessage());
             return ResponseEntity.ok(response);
-
         }
-
     }
 
 
@@ -114,25 +114,6 @@ public class AuxDepoController {
 
     }
 
-
-
-    @PostMapping("/auxdepo/agregarNumeroEntrega")
-
-    public ResponseEntity<ApiResponse> agregarNumeroEntrega(@RequestParam ("pedidoId") int pedidoId,@RequestParam ("numeroEntrega") String numeroEntrega ) {
-        ApiResponse response = new ApiResponse();
-
-        try {
-            fachada.agregarNumeroEntrega(pedidoId,numeroEntrega);
-            response.setPedidos(fachada.pedidosAll());
-            response.setMensaje("El pedido cambio de estado a listo para facturacion");
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            response.setMensaje(e.getMessage());
-            return ResponseEntity.ok(response);
-
-        }
-
-    }
 
     @PostMapping("/auxdepo/actualizar")
     public ResponseEntity<ApiResponse> actualizar(@RequestParam int id) throws Exception {
@@ -175,7 +156,43 @@ public class AuxDepoController {
 
         try {
             response.setPedidos(fachada.pedidosAll());
+            response.setCadeterias(fachada.obtenerCadeterias());
+            response.setClientes(fachada.obtenerClientes());
             response.setMensaje("La lista de pedidos se ha actualizado");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.setMensaje(e.getMessage());
+            return ResponseEntity.ok(response);
+        }
+    }
+
+    @PostMapping("/auxdepo/numeroEntrega")
+    public ResponseEntity<ApiResponse> numeroEntrega(@RequestParam ("idPedido") int idPedido, @RequestParam("numeroEntrega") String numeroEntrega) {
+        ApiResponse response = new ApiResponse();
+
+        try {
+            Pedido pedido = fachada.obtenerPedidoPorId(idPedido);
+            pedido.agregarNumeroEntrega(numeroEntrega);
+            fachada.guardar(pedido);
+            response.setPedidos(fachada.pedidosAll());
+            response.setMensaje("El Numero de entrega se añadio con exito");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.setMensaje(e.getMessage());
+            return ResponseEntity.ok(response);
+        }
+    }
+
+    @PostMapping("/auxdepo/numeroRastreo")
+    public ResponseEntity<ApiResponse> numeroRastro(@RequestParam ("idPedido") int idPedido, @RequestParam("numeroRastreo") String numeroRastreo) {
+        ApiResponse response = new ApiResponse();
+
+        try {
+            Pedido pedido = fachada.obtenerPedidoPorId(idPedido);
+            pedido.agregarNumeroRastreo(numeroRastreo);
+            fachada.guardar(pedido);
+            response.setPedidos(fachada.pedidosAll());
+            response.setMensaje("El Numero de Rastreo se añadio con exito");
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             response.setMensaje(e.getMessage());

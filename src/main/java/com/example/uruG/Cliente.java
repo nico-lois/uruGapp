@@ -15,6 +15,8 @@ public class Cliente extends Usuario {
     private String nombreResponsable;
     private String razonSocial;
     private String nombreFantasia;
+
+    private String direccionDeEntrega;
     @ManyToOne
     private Cadeteria cadeteriaDePreferencia;
     @Lob
@@ -22,20 +24,22 @@ public class Cliente extends Usuario {
     private byte[] pdfData;
 
 
-    public Cliente(String username, String password, String mail, String nombreCompleto, String celular, String nombreResponsable, String nombreRazonSocial, String nombreFantasia) {
+    public Cliente(String username, String password, String mail, String nombreCompleto, String celular, String nombreResponsable, String razonSocial, String nombreFantasia, String  direccionDeEntrega) {
 
         super(username, password, mail, nombreCompleto, celular);
         this.nombreResponsable = nombreResponsable;
-        this.razonSocial = nombreRazonSocial;
+        this.razonSocial = razonSocial;
         this.nombreFantasia = nombreFantasia;
+        this.direccionDeEntrega = direccionDeEntrega;
 
     }
 
-    public Cliente(Integer id, String username, String password, String mail, String nombreCompleto, String celular, String nombreResponsable, String nombreRazonSocial, String nombreFantasia) {
+    public Cliente(Integer id, String username, String password, String mail, String nombreCompleto, String celular, String nombreResponsable, String razonSocial, String nombreFantasia, String direccionDeEntrega) {
         super(username, password, mail, nombreCompleto, celular, id);
         this.nombreResponsable = nombreResponsable;
-        this.razonSocial = nombreRazonSocial;
+        this.razonSocial = razonSocial;
         this.nombreFantasia = nombreFantasia;
+        this.direccionDeEntrega = direccionDeEntrega;
     }
 
     public Cliente() {
@@ -59,6 +63,30 @@ public class Cliente extends Usuario {
 
     public byte[] getPdfData() {
         return pdfData;
+    }
+
+    public void setNombreResponsable(String nombreResponsable) {
+        this.nombreResponsable = nombreResponsable;
+    }
+
+    public void setRazonSocial(String razonSocial) {
+        this.razonSocial = razonSocial;
+    }
+
+    public void setNombreFantasia(String nombreFantasia) {
+        this.nombreFantasia = nombreFantasia;
+    }
+
+    public String getDireccionDeEntrega() {
+        return direccionDeEntrega;
+    }
+
+    public void setDireccionDeEntrega(String direccionDeEntrega) {
+        this.direccionDeEntrega = direccionDeEntrega;
+    }
+
+    public void setPdfData(byte[] pdfData) {
+        this.pdfData = pdfData;
     }
 
     public void setCadeteriaDePreferencia(Cadeteria cadeteriaDePreferencia) {
@@ -132,4 +160,6 @@ public class Cliente extends Usuario {
     public void agregarPDF(MultipartFile pdf) throws IOException {
         this.pdfData = pdf.getBytes();
     }
+
+
 }

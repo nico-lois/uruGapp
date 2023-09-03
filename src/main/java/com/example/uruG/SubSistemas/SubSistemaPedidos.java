@@ -2,6 +2,7 @@ package com.example.uruG.SubSistemas;
 
 import com.example.uruG.*;
 import com.example.uruG.Repositorios.ArticuloRepo;
+import com.example.uruG.Repositorios.AuxDepoRepo;
 import com.example.uruG.Repositorios.PedidoRepo;
 //import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class SubSistemaPedidos {
                 pedidoRepo.save(pedido);
             } else {
                 Pedido pedidoDB = obtenerPedidoPorId(pedido.getId());
-                actualizarListas( pedidoDB.getArticulos(),pedido.getArticulos());
+                actualizarListas(pedidoDB.getArticulos(),pedido.getArticulos());
                 pedido.modificarEstadoPedido(EstadoPedido.INGRESADO);
                 pedido.revisarStock();
                 pedidoRepo.save(pedido);
@@ -98,15 +99,7 @@ public class SubSistemaPedidos {
         }
     }
 
-    public boolean todosLosArticulosAgregados(ArrayList<Articulo> listaArticulos) {
 
-        for (Articulo a : listaArticulos) {
-            if (!a.isSeleccionado()) {
-                return false;
-            }
-        }
-        return true;
-    }
 
 
     public void eliminarPedido(int pedidoId) throws Exception {
@@ -143,9 +136,11 @@ public class SubSistemaPedidos {
         }
     }
 
-    private boolean todosLosArticulosEstanAgregados(ArrayList<Articulo> listaArticulos) {
-        for(Articulo a : listaArticulos) {
-            if (!a.isAgregado()) {
+
+    public boolean todosLosArticulosSeleccionados(ArrayList<Articulo> listaArticulos) {
+
+        for (Articulo a : listaArticulos) {
+            if (!a.isSeleccionado()) {
                 return false;
             }
         }
@@ -181,18 +176,6 @@ public class SubSistemaPedidos {
         }
     }
 
-    public void agregarNumeroEntrega(int pedidoId, String numeroEntrega) throws Exception {
-        try {
-            Pedido p = obtenerPedidoPorId(pedidoId);
-            if(p.agregarNumeroEntrega(numeroEntrega)) {
-                pedidoRepo.save(p);
-            } else {
-                throw new Exception("El pedido esta siendo modificado por el vendedor");
-            }
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
-        }
-    }
 
     public void pedidoFacturado(int pedidoId, Administrativo admin) throws Exception {
         try {
@@ -238,15 +221,16 @@ public class SubSistemaPedidos {
         }
     }
 
-    public void pedidoArmado(int pedidoid, ArrayList<Articulo> listaArticulos) throws Exception {
+    public void pedidoArmado(int pedidoid, AuxiliarDeposito auxDepo, ArrayList<Articulo> listaArticulos) throws Exception {
         try {
-            if(todosLosArticulosEstanAgregados(listaArticulos)) {
+            if(todosLosArticulosSeleccionados(listaArticulos)) {
                 Pedido pedido = obtenerPedidoPorId(pedidoid);
                 if(pedido.marcarComoArmado()) {
                     pedido.actualizarListaAux(listaArticulos);
                     pedido.revisarStock();
 //                    List<Articulo> articulos = pedido.getArticulos();
 //                    marcarArticulosComoSeleccionados(articulos);
+                    pedido.setAuxDep(auxDepo);
                     pedidoRepo.save(pedido);
                 } else {
                     throw new Exception("El vendedor esta editando el pedido en este momento");
@@ -258,6 +242,7 @@ public class SubSistemaPedidos {
             throw new Exception(e.getMessage());
         }
     }
+
 
     private void marcarArticulosComoSeleccionados(List<Articulo> articulos) {
         for(Articulo a : articulos) {
@@ -285,6 +270,14 @@ public class SubSistemaPedidos {
             } else {
                 throw new Exception("No se pudo marcar el pedido como recibido");
             }
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    public void guardar(Pedido pedido) throws Exception {
+        try {
+            pedidoRepo.save(pedido);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }

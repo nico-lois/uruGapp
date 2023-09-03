@@ -37,10 +37,11 @@ public class VendedorController {
             Vendedor nuevoVendedor = fachada.obtenerVendedorPorId(pedidoDOM.getVendedorId());
             Cliente nuevoCliente = fachada.obtenerClientePorId(pedidoDOM.getClienteId());
             Cadeteria nuevaCadeteria = fachada.obtenerCadeteriaPorId(pedidoDOM.getCadeteriaId());
+            String observacion = pedidoDOM.getObservacion();
             int idPedido = pedidoDOM.getPedidoId();
             ArrayList<Articulo> nuevosArticulos = pedidoDOM.getArticulos();
             fachada.guardarArticulos(nuevosArticulos);
-            Pedido pedido = new Pedido(idPedido,nuevoVendedor, nuevoCliente, nuevaCadeteria, nuevosArticulos);
+            Pedido pedido = new Pedido(idPedido,nuevoVendedor, nuevoCliente, nuevaCadeteria, nuevosArticulos, observacion);
             fachada.guardarPedido(pedido);
             response.setPedido(fachada.obtenerPedidoPorId(idPedido));
             response.setPedidos(fachada.pedidosPorVendedor(nuevoVendedor));
@@ -87,13 +88,15 @@ public class VendedorController {
         }
     }
 
-    @PostMapping("actualizarPedidos")
+    @PostMapping("actualizar")
     public ResponseEntity<ApiResponse> actualizarPedidos(@RequestParam int idVendedor) throws Exception {
         ApiResponse response = new ApiResponse();
 
         try {
             Vendedor vendedor = fachada.obtenerVendedorPorId(idVendedor);
             response.setPedidos(fachada.pedidosPorVendedor(vendedor));
+            response.setCadeterias(fachada.obtenerCadeterias());
+            response.setClientes(fachada.obtenerClientes());
             response.setMensaje("La lista de pedidos se ha actualizado");
             return ResponseEntity.ok(response);
         } catch (Exception e) {
@@ -101,5 +104,7 @@ public class VendedorController {
             return ResponseEntity.ok(response);
         }
     }
+
+
 
 }

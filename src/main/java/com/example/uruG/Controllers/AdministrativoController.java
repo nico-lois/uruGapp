@@ -40,6 +40,8 @@ public class AdministrativoController {
 
         try {
             response.setPedidos(fachada.pedidosAll());
+            response.setCadeterias(fachada.obtenerCadeterias());
+            response.setClientes(fachada.obtenerClientes());
             response.setMensaje("La lista de pedidos se ha actualizado");
             return ResponseEntity.ok(response);
         } catch (Exception e) {

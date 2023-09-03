@@ -1,5 +1,4 @@
 package com.example.uruG;
-import com.example.uruG.Servicios.GeneralException;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,14 +23,16 @@ public class Pedido {
     private List<Articulo> articulos;
     @Temporal(TemporalType.DATE)
     private Date fecha;
-    private String Observaciones;
+    private String observaciones;
     private EstadoPedido estado;
     private boolean marcadoRecibidoPorCliente;
     private String numeroEntrega;
-
+    private String numeroRastreo;
+    private int valoracion;
     private boolean sinStock = false;
 
-    public Pedido(int id, Vendedor vendedor, Cliente cliente, Cadeteria cadeteria, List<Articulo> articulos) {
+
+    public Pedido(int id, Vendedor vendedor, Cliente cliente, Cadeteria cadeteria, List<Articulo> articulos, String observaciones) {
         this.vendedor = vendedor;
         this.cliente = cliente;
         this.cadeteria = cadeteria;
@@ -39,6 +40,7 @@ public class Pedido {
         this.estado = EstadoPedido.INGRESADO;
         this.id = id;
         this.fecha = new Date();
+        this.observaciones = observaciones;
     }
 
     public Pedido() {
@@ -113,11 +115,11 @@ public class Pedido {
     }
 
     public String getObservaciones() {
-        return Observaciones;
+        return observaciones;
     }
 
     public void setObservaciones(String observaciones) {
-        Observaciones = observaciones;
+        this.observaciones = observaciones;
     }
 
     public EstadoPedido getEstado() {
@@ -162,6 +164,22 @@ public class Pedido {
 
     public void setSinStock(boolean sinStock) {
         this.sinStock = sinStock;
+    }
+
+    public String getNumeroRastreo() {
+        return numeroRastreo;
+    }
+
+    public void setNumeroRastreo(String numeroRastreo) {
+        this.numeroRastreo = numeroRastreo;
+    }
+
+    public int getValoracion() {
+        return valoracion;
+    }
+
+    public void setValoracion(int valoracion) {
+        this.valoracion = valoracion;
     }
 
     public boolean EsEditablePorVendedor() {
@@ -260,12 +278,12 @@ public class Pedido {
         }
     }
 
-    public boolean agregarNumeroEntrega(String numeroEntrega) {
+    public boolean agregarNumeroEntrega(String numeroEntrega) throws Exception {
         if(!numeroEntrega.isBlank()) {
             this.numeroEntrega = numeroEntrega;
             return true;
         }
-        return false;
+        throw new Exception("No se puede ingresar un numero de entrega vacio");
     }
 
 
@@ -283,5 +301,25 @@ public class Pedido {
 
     public void actualizarListaAux(ArrayList<Articulo> listaArticulos) {
         setArticulos(listaArticulos);
+    }
+
+    public void agregarValoracion(int valoracion, Cliente cli) throws Exception {
+        if(this.cliente == cli) {
+            if(valoracion > 0 && valoracion < 6) {
+                this.valoracion = valoracion;
+            } else {
+                throw new Exception("La valoracion tiene que ser desde 1 hasta 5");
+            }
+        } else {
+            throw new Exception("El pedido no pertenece a este cliente");
+        }
+    }
+
+    public boolean agregarNumeroRastreo(String numeroRastreo) throws Exception {
+        if(!numeroRastreo.isBlank()) {
+            this.numeroRastreo = numeroRastreo;
+            return true;
+        }
+        throw new Exception("No se puede ingresar un numero de rastreo en blanco");
     }
 }

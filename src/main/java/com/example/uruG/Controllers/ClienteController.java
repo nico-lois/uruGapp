@@ -65,7 +65,6 @@ public class ClienteController {
     public ResponseEntity<ApiResponse> registroCliente(@RequestBody Cliente cliente) throws GeneralException {
         ApiResponse response = new ApiResponse();
         try {
-            //falta guardar el pdf
                 fachada.guardarCliente(cliente);
                 response.setCliente(cliente);
                 response.setClientes(fachada.obtenerClientes());
@@ -144,6 +143,24 @@ public class ClienteController {
         try {
             Cliente cliente = fachada.obtenerClientePorId(idCliente);
             response.setPedidos(fachada.pedidosPorCliente(cliente));
+            response.setMensaje("La lista de pedidos se ha actualizado");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.setMensaje(e.getMessage());
+            return ResponseEntity.ok(response);
+        }
+    }
+
+    @PostMapping("/cliente/valorar")
+    public ResponseEntity<ApiResponse> valorar(@RequestParam ("id") int idPedido, @RequestParam("idCliente") int idCliente, @RequestParam("valor") int valoracion) throws Exception {
+        ApiResponse response = new ApiResponse();
+
+        try {
+            Pedido pedido = fachada.obtenerPedidoPorId(idPedido);
+            Cliente cli = fachada.obtenerClientePorId(idCliente);
+            pedido.agregarValoracion(valoracion,cli);
+            fachada.guardar(pedido);
+            response.setPedidos(fachada.pedidosPorCliente(cli));
             response.setMensaje("La lista de pedidos se ha actualizado");
             return ResponseEntity.ok(response);
         } catch (Exception e) {

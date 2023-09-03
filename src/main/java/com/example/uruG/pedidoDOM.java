@@ -15,9 +15,11 @@ public class pedidoDOM {
     private int auxdepoId;
     private ArrayList<Articulo> articulos;
 
+    private String observacion;
 
 
-    public pedidoDOM(int pedidoId, int clienteId, int cadeteriaId, int vendedorId, int administrativoId, int auxdepoId, ArrayList<Articulo> articulos) {
+
+    public pedidoDOM(int pedidoId, int clienteId, int cadeteriaId, int vendedorId, int administrativoId, int auxdepoId, ArrayList<Articulo> articulos, String observacion) {
         this.pedidoId = pedidoId;
         this.clienteId = clienteId;
         this.cadeteriaId = cadeteriaId;
@@ -25,6 +27,7 @@ public class pedidoDOM {
         this.administrativoId = administrativoId;
         this.auxdepoId = auxdepoId;
         this.articulos = articulos;
+        this.observacion = observacion;
     }
 
     public int getPedidoId() {
@@ -53,5 +56,9 @@ public class pedidoDOM {
 
     public int getAuxdepoId() {
         return auxdepoId;
+    }
+
+    public String getObservacion() {
+        return observacion;
     }
 }

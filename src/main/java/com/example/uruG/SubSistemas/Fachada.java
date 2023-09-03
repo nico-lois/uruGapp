@@ -83,10 +83,7 @@ public class Fachada {
     }
 
 
-    //HAY QUE REVISAR ACA
-    public boolean todosLosArticulosAgregados(ArrayList<Articulo> listaArticulos) {
-        return subPedido.todosLosArticulosAgregados(listaArticulos);
-    }
+
 
     public void eliminarPedido(int pedidoId) throws Exception {
          subPedido.eliminarPedido(pedidoId);
@@ -120,9 +117,6 @@ public class Fachada {
         subPedido.pedidoEntregado(idpedido);
     }
 
-    public void agregarNumeroEntrega(int pedidoId, String numeroEntrega) throws Exception {
-        subPedido.agregarNumeroEntrega(pedidoId,numeroEntrega);
-    }
 
     public void pedidoFacturado(int pedidoId, Administrativo admin) throws Exception {
         subPedido.pedidoFacturado(pedidoId,admin);
@@ -145,16 +139,16 @@ public class Fachada {
     }
 
 
-    public void obtenerAuxDepoPorId(int id) throws Exception {
-        subUsu.obtenerAuxDepoPorId(id);
+    public AuxiliarDeposito obtenerAuxDepoPorId(int id) throws Exception {
+        return subUsu.obtenerAuxDepoPorId(id);
     }
 
     public void guardarAvance(int pedidoid, ArrayList<Articulo> listaArticulos) throws Exception {
         subPedido.guardarAvance(pedidoid, listaArticulos);
     }
 
-    public void pedidoArmado(int pedidoid, ArrayList<Articulo> listaArticulos) throws Exception {
-        subPedido.pedidoArmado(pedidoid,listaArticulos);
+    public void pedidoArmado(int pedidoid, AuxiliarDeposito aux, ArrayList<Articulo> listaArticulos) throws Exception {
+        subPedido.pedidoArmado(pedidoid, aux,listaArticulos);
     }
 
     public void enviarWP(int pedidoId) {
@@ -167,5 +161,11 @@ public class Fachada {
 
     public void guardarCliente2(Cliente cliente, MultipartFile pdf) throws Exception {
         subUsu.guardarCliente2(cliente, pdf);
+    }
+
+
+
+    public void guardar(Pedido pedido) throws Exception {
+        subPedido.guardar(pedido);
     }
 }
