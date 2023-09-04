@@ -26,6 +26,9 @@ jobs:
           overwrite-settings: true
           job-status: success
 
+      - name: Otorgar permisos de ejecución al archivo mvnw
+        run: chmod +x mvnw
+
       - name: Build with Maven
         run: |
           ./mvnw clean install --batch-mode --errors
@@ -54,4 +57,3 @@ jobs:
           app-name: ururacergestion  # Nombre de tu Azure Web App
           publish-profile: ${{ secrets.AzureAppService_PublishProfile_406529b6be6f4991a1033c04a74c410c }}
           package: '*.jar'
-
