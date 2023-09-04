@@ -17,20 +17,10 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'  # Versión de Java deseada
-          distribution: 'adopt'  # Distribución de Java (adoptopenjdk)
-          architecture: 'x64'
-          check-latest: false
-          server-id: github
-          server-username: ${{ github.actor }}
-          server-password: ${{ secrets.GITHUB_TOKEN }}
-          overwrite-settings: true
-          job-status: success
-
-      - name: Otorgar permisos de ejecución al archivo mvnw
-        run: chmod +x mvnw
 
       - name: Build with Maven
-        run: mvn clean install --batch-mode --errors
+        run: |
+          mvn clean install --batch-mode --errors
 
       - name: Upload artifact for deployment
         uses: actions/upload-artifact@v2
@@ -53,6 +43,6 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ururacergestion  # Nombre de tu Azure Web App
+          app-name: 'ururacergestion'  # Nombre de tu Azure Web App
           publish-profile: ${{ secrets.AzureAppService_PublishProfile_406529b6be6f4991a1033c04a74c410c }}
           package: '*.jar'
