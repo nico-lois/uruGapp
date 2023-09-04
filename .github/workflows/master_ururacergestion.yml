@@ -17,6 +17,8 @@ jobs:
         uses: actions/setup-java@v2
         with:
           java-version: '17'  # Versión de Java deseada
+          distribution: 'adopt'  # Distribución de Java (adoptopenjdk)
+          architecture: 'x64'
 
       - name: Build with Maven
         run: |
