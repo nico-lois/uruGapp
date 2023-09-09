@@ -104,7 +104,7 @@ public class AuxDepoController {
         try {
             fachada.pedidoEntregado(pedidoId);
             response.setPedidos(fachada.pedidosAll());
-            response.setMensaje("El pedido cambio de estado a Entegado");
+            response.setMensaje("El pedido cambio de estado a Entregado");
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             response.setMensaje(e.getMessage());

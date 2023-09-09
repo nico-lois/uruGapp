@@ -2,10 +2,7 @@
 package com.example.uruG;
 
 import com.example.uruG.Servicios.GeneralException;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Cadeteria {
@@ -14,6 +11,8 @@ public class Cadeteria {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+
+    @Column(unique = true)
     private String nombreCadeteria;
 
     private String nombreContacto;
@@ -65,7 +64,7 @@ public class Cadeteria {
 
     public boolean validarCadeteria() throws Exception {
         try {
-            if(noVacioNiNull(nombreCadeteria) &&  noVacioNiNull(direccionEntrega) && validarMail()) {
+            if(noVacioNiNull(nombreCadeteria) &&  noVacioNiNull(direccionEntrega) && validarMail() && validarTelefono()) {
                 return true;
             } else {
                 throw new Exception("El nombre de la cadeteria no puede ser vacio");
@@ -86,16 +85,16 @@ public class Cadeteria {
 
 
     private boolean validarTelefono() throws Exception {
-
-        if(noVacioNiNull(telefono)){
-            String regex = "^(09)[0-9]{7}$";
+        if (noVacioNiNull(telefono)) {
+            String regex = "^(09\\d{7}|\\d{8})$"; // Acepta números de 8 dígitos o números de teléfono uruguayos
             if (telefono.matches(regex)) {
                 return true;
             }
-            throw new Exception("El número de celular no cumple con el formato válido en Uruguay");
+            throw new Exception("El número de celular no cumple con el formato válido en Uruguay ni es un número de 8 dígitos.");
         }
         return true;
     }
+
 
     private boolean validarMail() throws Exception {
         if(noVacioNiNull(mail)) {
